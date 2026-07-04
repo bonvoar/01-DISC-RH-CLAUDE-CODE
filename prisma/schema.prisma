@@ -1,0 +1,142 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─── Enums ───────────────────────────────────────────────────────────────────
+
+enum CandidateStatus {
+  IN_PROGRESS
+  COMPLETED
+  PROFILE_READY
+  FIT_GENERATED
+}
+
+enum ReportType {
+  PROFILE
+  FIT
+}
+
+enum UserRole {
+  RECRUITER
+  ADMIN
+}
+
+// ─── Models ──────────────────────────────────────────────────────────────────
+
+model Company {
+  id         String      @id @default(cuid())
+  name       String
+  domain     String      @unique
+  createdAt  DateTime    @default(now())
+  recruiters Recruiter[]
+  jobs       Job[]
+}
+
+model Recruiter {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  passwordHash String
+  name         String
+  role         UserRole  @default(RECRUITER)
+  companyId    String
+  company      Company   @relation(fields: [companyId], references: [id])
+  jobs         Job[]
+  createdAt    DateTime  @default(now())
+}
+
+model Job {
+  id              String      @id @default(cuid())
+  title           String
+  descriptionRaw  String      @db.Text
+  descriptionFile String?
+  companyId       String
+  recruiterId     String
+  publicSlug      String      @unique
+  company         Company     @relation(fields: [companyId], references: [id])
+  recruiter       Recruiter   @relation(fields: [recruiterId], references: [id])
+  candidates      Candidate[]
+  createdAt       DateTime    @default(now())
+}
+
+model Candidate {
+  id                   String          @id @default(cuid())
+  fullName             String
+  email                String
+  companyEmail         String
+  consentLGPD          Boolean
+  consentAt            DateTime
+  consentVersion       String
+  jobId                String?
+  job                  Job?            @relation(fields: [jobId], references: [id])
+  answers              Answer[]
+  discResult           DiscResult?
+  reports              Report[]
+  answersEmailSentAt   DateTime?
+  recruiterNotifiedAt  DateTime?
+  forgetMeToken        String?         @unique
+  forgetMeRequestedAt  DateTime?
+  sessionToken         String?         @unique
+  status               CandidateStatus @default(IN_PROGRESS)
+  createdAt            DateTime        @default(now())
+}
+
+model Answer {
+  id          String    @id @default(cuid())
+  candidateId String
+  candidate   Candidate @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  itemKey     String
+  value       String
+  createdAt   DateTime  @default(now())
+
+  @@unique([candidateId, itemKey])
+}
+
+model DiscResult {
+  id              String    @id @default(cuid())
+  candidateId     String    @unique
+  candidate       Candidate @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  scoreD          Int
+  scoreI          Int
+  scoreS          Int
+  scoreC          Int
+  primaryFactor   String
+  secondaryFactor String
+  style           String
+  biasFlags       String[]
+  createdAt       DateTime  @default(now())
+}
+
+model Report {
+  id           String     @id @default(cuid())
+  candidateId  String
+  type         ReportType
+  contentMd    String     @db.Text
+  pdfUrl       String?
+  modelUsed    String
+  promptVersion String
+  tokensInput  Int
+  tokensOutput Int
+  createdAt    DateTime   @default(now())
+
+  candidate    Candidate  @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+
+  @@unique([candidateId, type])
+}
+
+model AuditLog {
+  id          String   @id @default(cuid())
+  action      String
+  entityType  String
+  entityId    String
+  recruiterId String?
+  ip          String?
+  userAgent   String?
+  createdAt   DateTime @default(now())
+
+  @@index([entityId])
+  @@index([recruiterId])
+}
