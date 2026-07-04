@@ -31,7 +31,7 @@ export default async function QuizLandingPage({ params }: Props) {
             <InfoItem emoji="⏱" text="Duração estimada: 12 a 18 minutos" />
             <InfoItem emoji="💾" text="Suas respostas são salvas automaticamente" />
             <InfoItem emoji="🔒" text="Apenas a empresa recrutadora acessa os resultados técnicos" />
-            <InfoItem emoji="📧" text="Você receberá por e-mail uma cópia das respostas que informar" />
+            <InfoItem emoji="📄" text="Você poderá baixar em PDF uma cópia das respostas que informar" />
           </div>
 
           <div className="bg-slate-50 rounded-lg p-4 text-sm text-slate-600 mb-6">

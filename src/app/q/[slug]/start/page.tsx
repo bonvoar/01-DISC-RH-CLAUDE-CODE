@@ -65,7 +65,7 @@ export default function QuizStartPage() {
             value={form.email}
             onChange={(v) => set("email", v)}
             errors={errors.email}
-            hint="Você receberá uma cópia das suas respostas neste e-mail"
+            hint="Usado apenas para identificação e para eventual solicitação de exclusão de dados (LGPD)"
           />
           <Field
             id="companyEmail"
