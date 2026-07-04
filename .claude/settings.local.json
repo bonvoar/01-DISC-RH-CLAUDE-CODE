@@ -49,7 +49,9 @@
       "Bash(git check-ignore *)",
       "Bash(openssl rand *)",
       "Bash(grep -rlE \"sk-ant-|re_[A-Za-z0-9_]{15,}|signkey-[a-f0-9]{20,}|postgresql://postgres\" prisma/migrations/ .claude/skills/)",
-      "Bash(git add *)"
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)"
     ]
   }
 }
