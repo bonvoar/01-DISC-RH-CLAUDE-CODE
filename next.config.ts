@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { withSentryConfig } from "@sentry/nextjs";
 
 const securityHeaders = [
   { key: "X-DNS-Prefetch-Control", value: "on" },
@@ -14,7 +15,7 @@ const securityHeaders = [
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' blob: data:",
       "font-src 'self'",
-      "connect-src 'self'",
+      "connect-src 'self' https://o4511679781142528.ingest.us.sentry.io",
       "frame-ancestors 'none'",
     ].join("; "),
   },
@@ -32,4 +33,9 @@ const nextConfig: NextConfig = {
   serverExternalPackages: ["pdf-parse", "mammoth", "@react-pdf/renderer"],
 };
 
-export default nextConfig;
+export default withSentryConfig(nextConfig, {
+  org: "bonvoar",
+  project: "disc-rh",
+  silent: !process.env.CI,
+  authToken: process.env.SENTRY_AUTH_TOKEN,
+});
