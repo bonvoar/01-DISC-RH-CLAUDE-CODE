@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import { prisma } from "@/lib/prisma";
 import { nanoid } from "nanoid";
 import { sendForgetMeEmail } from "@/lib/email/resend";
@@ -29,7 +30,13 @@ export async function POST(req: NextRequest) {
       data: { forgetMeToken: token, forgetMeRequestedAt: new Date() },
     });
 
-    await sendForgetMeEmail({ toEmail: email, candidateName: candidate.fullName, token });
+    try {
+      await sendForgetMeEmail({ toEmail: email, candidateName: candidate.fullName, token });
+    } catch {
+      // Não repassar o erro original: pode conter o e-mail do candidato
+      // (ex.: mensagens de erro do Resend em modo sandbox ecoam o destinatário).
+      Sentry.captureMessage("Falha ao enviar e-mail de confirmação de exclusão (forget-me)", "error");
+    }
   }
 
   return NextResponse.json({ ok: true });

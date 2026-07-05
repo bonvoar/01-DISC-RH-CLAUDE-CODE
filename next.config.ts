@@ -15,7 +15,7 @@ const securityHeaders = [
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' blob: data:",
       "font-src 'self'",
-      "connect-src 'self' https://o4511679781142528.ingest.us.sentry.io",
+      "connect-src 'self'",
       "frame-ancestors 'none'",
     ].join("; "),
   },
@@ -38,4 +38,5 @@ export default withSentryConfig(nextConfig, {
   project: "disc-rh",
   silent: !process.env.CI,
   authToken: process.env.SENTRY_AUTH_TOKEN,
+  tunnelRoute: "/monitoring",
 });
