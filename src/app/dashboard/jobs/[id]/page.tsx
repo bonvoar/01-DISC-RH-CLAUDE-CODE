@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import { CopyLinkButton } from "./CopyLinkButton";
+import { CandidateRowActions } from "./CandidateRowActions";
 
 const STATUS_LABELS: Record<string, string> = {
   IN_PROGRESS: "Em andamento",
@@ -93,6 +94,7 @@ export default async function JobDetailPage({ params, searchParams }: Props) {
                     <th className="text-left px-6 py-3 font-medium text-slate-600">E-mail</th>
                     <th className="text-left px-6 py-3 font-medium text-slate-600">Status</th>
                     <th className="text-left px-6 py-3 font-medium text-slate-600">Data</th>
+                    <th className="text-left px-6 py-3 font-medium text-slate-600">Ações</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -114,6 +116,13 @@ export default async function JobDetailPage({ params, searchParams }: Props) {
                       </td>
                       <td className="px-6 py-3 text-slate-500">
                         {new Date(c.createdAt).toLocaleDateString("pt-BR")}
+                      </td>
+                      <td className="px-6 py-3">
+                        <CandidateRowActions
+                          candidateId={c.id}
+                          candidateName={c.fullName}
+                          canDownloadPdf={["PROFILE_READY", "FIT_GENERATED"].includes(c.status)}
+                        />
                       </td>
                     </tr>
                   ))}

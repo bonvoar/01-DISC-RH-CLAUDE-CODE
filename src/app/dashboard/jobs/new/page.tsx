@@ -109,6 +109,12 @@ export default function NewJobPage() {
             <p className="text-xs text-slate-500 mb-4">
               Faça upload de um PDF ou DOCX. O texto será extraído automaticamente para revisão.
             </p>
+            <p className="text-xs text-slate-500 bg-slate-50 border border-slate-200 rounded-lg p-3 mb-4">
+              Não é necessário definir um perfil DISC-alvo: ao gerar a análise de fit para
+              cada candidato, a IA lê este texto e infere os requisitos comportamentais
+              da vaga diretamente da descrição. Quanto mais detalhada a descrição
+              (responsabilidades, rotina, tipo de ambiente), mais precisa a análise.
+            </p>
 
             <label className="block">
               <div className="border-2 border-dashed border-slate-300 rounded-lg p-8 text-center cursor-pointer hover:border-indigo-400 transition-colors">
